@@ -107,7 +107,7 @@ VFS = {
             "tarpit_slice.raw": "[BINARY MEMORY SLICE -> Run: probe tarpit_slice.raw]"
         }
     },
-    "/mnt/b_Kozachenko_vault/Kotya_archive": {
+    "/mnt/b_kozachenko_vault/Kotya_archive": {
         "locked_by": "unlock_act2_b",
         "files": {
             "Kotya_readme.c": (
@@ -273,7 +273,7 @@ def ensure_mit_license(holder: str = "Ivan Kononenko"):
 
 def resolve_path(cwd: str, target: str) -> str:
     if not target or target == "~":
-        return "/home/b_kravchenko"
+        return "/home/b_kozachenko"
     raw = target if target.startswith("/") else f"{cwd.rstrip('/')}/{target}"
     parts = []
     for p in raw.split("/"):
@@ -291,7 +291,7 @@ class ShellSession:
     """Stateful mock bash shell driving both local CLI and WebSocket sessions."""
 
     def __init__(self):
-        self.cwd = "/home/b_kravchenko"
+        self.cwd = "/home/b_kozachenko"
         self.unlocked: set[str] = set()
         self.env: dict[str, str] = {}
 
@@ -406,7 +406,7 @@ class ShellSession:
 
         elif cmd == "cd":
             if len(args) < 2:
-                self.cwd = "/home/b_kravchenko"
+                self.cwd = "/home/b_kozachenko"
                 return "", None
             target_dir = resolve_path(self.cwd, args[1])
             if target_dir in ("/", "/home", "/mnt", "/sys", "/sys/neuromem"):
