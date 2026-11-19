@@ -3,7 +3,7 @@ import readline
 import shlex
 import sys
 from pathlib import Path
-from synapse_probe import launch_probe, encode_license_sig, SECRET_PAYLOAD
+from archive.synapse_probe import launch_probe, encode_license_sig, SECRET_PAYLOAD
 
 def ensure_license_file():
     """Writes LICENSE.txt in the current working directory with the ROR-3 meta-clue."""

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>koenigsberg-ws-14 // Technakraj Systems</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #050505;
+      color: #33ff33;
+      font-family: "Courier New", Courier, monospace;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #terminal-frame {
+      border: 1px solid #1f5c1f;
+      padding: 10px;
+      background-color: #000000;
+      box-shadow: 0 0 24px rgba(0, 255, 65, 0.08);
+    }
+    #meta-bar {
+      width: 100%;
+      max-width: 740px;
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+      font-size: 12px;
+      color: #2b7a2b;
+    }
+    #meta-bar a {
+      color: #33ff33;
+      text-decoration: none;
+    }
+    #meta-bar a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div id="terminal-frame">
+    <div id="terminal"></div>
+  </div>
+  <div id="meta-bar">
+    <span>NODE: koenigsberg-ws-14 [80x24 VT100]</span>
+    <span><a href="/LICENSE" target="_blank" rel="noopener">LICENSE</a></span>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
+  <script>
+    const term = new Terminal({
+      cols: 80,
+      rows: 24,
+      cursorBlink: true,
+      fontFamily: '"JetBrains Mono", "Fira Code", "Courier New", monospace',
+      fontSize: 15,
+      theme: {
+        background: "#000000",
+        foreground: "#33ff33",
+        cursor: "#33ff33",
+        selectionBackground: "#33ff33",
+        selectionForeground: "#000000",
+        green: "#33ff33",
+        brightGreen: "#66ff66",
+        cyan: "#33ffff",
+        brightCyan: "#66ffff",
+        yellow: "#ffff33",
+        brightYellow: "#ffff66",
+        red: "#ff3333",
+        brightRed: "#ff6666"
+      }
+    });
+
+    term.open(document.getElementById("terminal"));
+    term.focus();
+
+    // Enable SGR mouse reporting (1000 = clicks, 1003 = hover motion, 1006 = SGR encoding)
+    term.write("\x1b[?1000h\x1b[?1003h\x1b[?1006h");
+
+    const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
+    const ws = new WebSocket(`${proto}//${window.location.host}/ws`);
+
+    ws.onmessage = (event) => {
+      term.write(event.data);
+    };
+
+    ws.onclose = () => {
+      term.write("\r\n\x1b[1;31m[CONNECTION CLOSED BY REMOTE HOST]\x1b[0m\r\n");
+    };
+
+    term.onData((data) => {
+      if (ws.readyState === WebSocket.OPEN) {
+        ws.send(data);
+      }
+    });
+  </script>
+</body>
+</html>
