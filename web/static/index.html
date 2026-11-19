@@ -83,9 +83,6 @@
     term.open(document.getElementById("terminal"));
     term.focus();
 
-    // Enable SGR mouse reporting (1000 = clicks, 1003 = hover motion, 1006 = SGR encoding)
-    term.write("\x1b[?1000h\x1b[?1003h\x1b[?1006h");
-
     const proto = window.location.protocol === "https:" ? "wss:" : "ws:";
     const ws = new WebSocket(`${proto}//${window.location.host}/ws`);
 

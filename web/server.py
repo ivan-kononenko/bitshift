@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import FileResponse, PlainTextResponse
@@ -6,6 +7,7 @@ from core.demodulator import DemodulatorSession
 from core.vfs import ShellSession, ensure_mit_license
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
+SGR_MOUSE_RE = re.compile(r"\x1b\[<(\d+);(\d+);(\d+)([Mm])")
 
 app = FastAPI(title="Technakraj Systems // Synapse-V Web Terminal")
 
@@ -29,9 +31,8 @@ async def serve_license():
 def render_ansi_frame(session: DemodulatorSession) -> str:
     """Renders the 80x24 DemodulatorSession state into VT100/ANSI escape codes."""
     cfg = session.config
-    buf = ["\x1b[?25l\x1b[H\x1b[2J"]  # Hide cursor, home, clear screen
+    buf = ["\x1b[?25l\x1b[H\x1b[2J"]
 
-    # Header (Rows 1..5 in 1-based ANSI coordinates)
     buf.append(
         "\x1b[1;3H\x1b[1;36m=== [TECHNAKRAJ SYSTEMS // SYNAPSE-V KERNEL PROBE] ===\x1b[0m"
     )
@@ -48,7 +49,6 @@ def render_ansi_frame(session: DemodulatorSession) -> str:
     )
     buf.append(f"\x1b[5;3H\x1b[2;32m{'─' * 76}\x1b[0m")
 
-    # Dual-Column Grid (Rows 6..13 in 1-based ANSI)
     grid_rows, hovered = session.get_grid_snapshot()
     for r, (str_l, str_r) in enumerate(grid_rows):
         y = 6 + r
@@ -58,13 +58,11 @@ def render_ansi_frame(session: DemodulatorSession) -> str:
             f"\x1b[{y};43H\x1b[32m{str_r}\x1b[0m"
         )
 
-    # Reverse-video highlight for hovered token
     if hovered:
         hy = session.cur_y + 1
         hx = hovered["start_x"] + 1
         buf.append(f"\x1b[{hy};{hx}H\x1b[1;30;42m{hovered['val']}\x1b[0m")
 
-    # Footer (Rows 14..24 in 1-based ANSI)
     buf.append(f"\x1b[14;3H\x1b[2;32m{'─' * 76}\x1b[0m")
     tok_info = (
         f"CAPTURED TOKEN: \"{hovered['val']}\" (READY)"
@@ -79,7 +77,6 @@ def render_ansi_frame(session: DemodulatorSession) -> str:
     buf.append("\x1b[23;3H\x1b[2;32m  Enter / Click : Acquire Token | Backspace: Pop Token\x1b[0m")
     buf.append("\x1b[24;3H\x1b[2;32m  q / Esc       : Abort Session\x1b[0m")
 
-    # Position visible block cursor
     cy = session.cur_y + 1
     cx = session.cur_x + 1
     buf.append(f"\x1b[{cy};{cx}H\x1b[?25h")
@@ -87,21 +84,15 @@ def render_ansi_frame(session: DemodulatorSession) -> str:
 
 
 def parse_tui_input(session: DemodulatorSession, data: str):
-    """Translates raw xterm.js keystrokes and SGR mouse sequences into DemodulatorSession actions."""
-    # SGR mouse event: \x1b[<button;col;rowM or m
+    """Translates xterm.js keystrokes and batched SGR mouse sequences into DemodulatorSession actions."""
     if data.startswith("\x1b[<"):
-        try:
-            body = data[3:]
-            is_press = body.endswith("M")
-            parts = body[:-1].split(";")
-            btn, col, row = int(parts[0]), int(parts[1]), int(parts[2])
+        for m in SGR_MOUSE_RE.finditer(data):
+            btn, col, row, kind = int(m.group(1)), int(m.group(2)), int(m.group(3)), m.group(4)
             x, y = col - 1, row - 1
             if 5 <= y <= 12 and (2 <= x <= 36 or 42 <= x <= 76):
                 session.set_cursor(y, x)
-                if is_press and btn == 0:
+                if kind == "M" and btn == 0:
                     session.acquire_token()
-        except (ValueError, IndexError):
-            pass
         return
 
     if data in ("q", "\x1b"):
@@ -156,8 +147,8 @@ async def terminal_ws(ws: WebSocket):
                         outcome, probe.final_directive, probe.status_msg
                     )
                     probe = None
-                    # Exit alternate screen buffer and print outcome
-                    await ws.send_text("\x1b[?1049l\x1b[?25h")
+                    # Disable SGR mouse tracking and exit alternate screen buffer
+                    await ws.send_text("\x1b[?1003l\x1b[?1000l\x1b[?1006l\x1b[?1049l\x1b[?25h")
                     await write_line(res_out)
                     if state == "GAME_OVER":
                         await ws.close()
@@ -165,7 +156,10 @@ async def terminal_ws(ws: WebSocket):
                     await ws.send_text(shell.prompt)
                 continue
 
-            # Mode 2: Interactive Bash Shell line editor
+            # Mode 2: Interactive Bash Shell line editor (ignore ANSI escape sequences)
+            if data.startswith("\x1b"):
+                continue
+
             for ch in data:
                 if ch in ("\r", "\n"):
                     await ws.send_text("\r\n")
@@ -183,8 +177,11 @@ async def terminal_ws(ws: WebSocket):
                             return
                         elif kind == "PROBE":
                             probe = DemodulatorSession(arg, session_env=shell.env)
-                            # Enter alternate screen buffer and render initial frame
-                            await ws.send_text("\x1b[?1049h" + render_ansi_frame(probe))
+                            # Enter alternate screen buffer and enable SGR mouse tracking
+                            await ws.send_text(
+                                "\x1b[?1049h\x1b[?1000h\x1b[?1003h\x1b[?1006h"
+                                + render_ansi_frame(probe)
+                            )
                             break
                     await ws.send_text(shell.prompt)
 
@@ -193,7 +190,7 @@ async def terminal_ws(ws: WebSocket):
                         line_buf = line_buf[:-1]
                         await ws.send_text("\b \b")
 
-                elif ch == "\x03":  # Ctrl+C
+                elif ch == "\x03":
                     line_buf = ""
                     await ws.send_text(f"^C\r\n{shell.prompt}")
 

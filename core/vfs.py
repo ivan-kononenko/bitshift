@@ -380,16 +380,16 @@ class ShellSession:
 
         elif cmd == "ls":
             target_dir = resolve_path(self.cwd, args[1]) if len(args) > 1 else self.cwd
-            if target_dir == "/":
-                return "home/  mnt/  sys/", None
+            prefix = "/" if target_dir == "/" else target_dir.rstrip("/") + "/"
+
             if target_dir not in VFS:
                 children = sorted({
-                    d.split("/")[len(target_dir.split("/"))]
+                    d[len(prefix):].split("/")[0] + "/"
                     for d in VFS
-                    if d.startswith(target_dir.rstrip("/") + "/")
+                    if d.startswith(prefix) and d != target_dir
                 })
                 if children:
-                    return "  ".join(c + "/" for c in children), None
+                    return "  ".join(children), None
                 return f"ls: cannot access '{target_dir}': No such file or directory", None
 
             node = VFS[target_dir]
@@ -397,9 +397,9 @@ class ShellSession:
                 return f"ls: cannot open directory '{target_dir}': Permission denied (Encrypted)", None
 
             subdirs = sorted({
-                d[len(target_dir):].strip("/").split("/")[0] + "/"
+                d[len(prefix):].split("/")[0] + "/"
                 for d in VFS
-                if d != target_dir and d.startswith(target_dir.rstrip("/") + "/")
+                if d.startswith(prefix) and d != target_dir
             })
             files = sorted(node["files"].keys())
             return "  ".join(subdirs + files), None
