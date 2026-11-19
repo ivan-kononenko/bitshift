@@ -1,0 +1,8 @@
+TECHNAKRAJ AI SYSTEMS - PROPRIETARY KERNEL LICENSE v4.19
+Königsberg Free Economic District, Demokratische Republik Königsberg
+---------------------------------------------------------------------
+All neural weights, LABYRINTH-0 routing tables, and inference telemetry
+are the sole property of Technakraj AI Systems.
+Unauthorized inspection of raw ring-buffers is strictly prohibited.
+
+BUILD_SIG: c84aa8a804a929c9880445e6e6e6450429c98ae904e90aa8c904c9a88a

@@ -1,0 +1,185 @@
+{
+  "act1_home": {
+    "header_sub": "LOCAL WORKSPACE CACHE // RACK: KOENIGSBERG_14",
+    "base_addr": "0xF400",
+    "attempts": 4,
+    "targets": {
+      "unlock_act1_b": ["PURGE", "CACHE", "*132*", "IF", "BUFFER", "DRIFTS"]
+    },
+    "rows": {
+      "0":  [["PURGE", 2], ["VALVE", 6]],
+      "1":  [["TURBINE", 4], ["AT", 1]],
+      "2":  [["CACHE", 5], ["ISOLATE", 2]],
+      "3":  [["*132*", 3], ["RESET", 5]],
+      "4":  [["PUMP", 6], ["*409*", 1], ["LOCK", 4]],
+      "5":  [["IF", 3], ["STATIC", 7]],
+      "6":  [["ONLINE", 0], ["LEAK", 2]],
+      "7":  [["ACTUATOR", 4], ["*880*", 5]],
+      "8":  [["BUFFER", 1], ["STATUS", 3]],
+      "9":  [["OVERHEAT", 4], ["WARN", 0]],
+      "10": [["FEEDLINE", 7], ["DRAIN", 2]],
+      "11": [["DRIFTS", 5], ["SHUTDOWN", 3]],
+      "12": [["SENSOR", 1], ["RELAY", 6]],
+      "13": [["STABLE", 7]],
+      "14": [["VENT", 3], ["TRIP", 5]],
+      "15": [["SYSTEM", 0], ["FAULT", 4]]
+    }
+  },
+  "act1_vault": {
+    "header_sub": "ENCRYPTED USER PARTITION // DEV_LOOP_04",
+    "base_addr": "0xE100",
+    "attempts": 4,
+    "targets": {
+      "unlock_act2": ["MOUNT", "VAULT", "*409*", "FOR", "AUDIT", "DUMP"]
+    },
+    "rows": {
+      "0":  [["MOUNT", 1], ["UNLINK", 5]],
+      "1":  [["BADGE", 3], ["QUOTA", 6]],
+      "2":  [["VAULT", 4], ["SECTOR", 0]],
+      "3":  [["*409*", 2], ["*132*", 7]],
+      "4":  [["HR", 5], ["INTERN", 1]],
+      "5":  [["FOR", 6], ["SKIP", 2]],
+      "6":  [["SPRINT", 0], ["TICKET", 4]],
+      "7":  [["AUDIT", 3], ["SCRUB", 7]],
+      "8":  [["PROXY", 1], ["TOKEN", 5]],
+      "9":  [["DUMP", 7], ["WIPE", 2]],
+      "10": [["REJECT", 4], ["GHOST", 0]],
+      "11": [["*901*", 3], ["NODE", 6]],
+      "12": [["LDAP", 2], ["AUTH", 5]],
+      "13": [["QUEUE", 1], ["EXIT", 4]],
+      "14": [["LOCAL", 6], ["HOST", 0]],
+      "15": [["SHARD", 3], ["NULL", 7]]
+    }
+  },
+  "act2_tarpit": {
+    "header_sub": "LABYRINTH-0 ROUTING TABLE // TARPIT_CLUSTER",
+    "base_addr": "0xC800",
+    "attempts": 4,
+    "targets": {
+      "unlock_act2_b": ["AUDIT", "MAZE", "*771*", "WHEN", "NODES", "COLLAPSE"]
+    },
+    "rows": {
+      "0":  [["AUDIT", 4], ["LOOP", 1]],
+      "1":  [["SYMLINK", 2], ["CRAWL", 6]],
+      "2":  [["MAZE", 0], ["GRAPH", 5]],
+      "3":  [["*771*", 7], ["*409*", 3]],
+      "4":  [["PRNG", 1], ["SEED", 4]],
+      "5":  [["WHEN", 3], ["UNTIL", 6]],
+      "6":  [["BRANCH", 5], ["DECAY", 2]],
+      "7":  [["NODES", 6], ["WEIGHT", 0]],
+      "8":  [["DRIFT", 2], ["BLEED", 7]],
+      "9":  [["COLLAPSE", 1], ["EXPAND", 4]],
+      "10": [["ROUTER", 3], ["PACKET", 5]],
+      "11": [["*303*", 0], ["LIMIT", 6]],
+      "12": [["DAEMON", 4], ["FILTER", 1]],
+      "13": [["STALL", 7], ["EPOCH", 2]],
+      "14": [["INDEX", 5], ["CACHE", 3]],
+      "15": [["TRAP", 0], ["VOID", 6]]
+    }
+  },
+  "act2_richter": {
+    "header_sub": "RICHTER ARCHIVE SUBSYSTEM // IPC_RING_08",
+    "base_addr": "0xB200",
+    "attempts": 4,
+    "targets": {
+      "unlock_act3": ["OPEN", "CORE", "*808*", "WHERE", "RICHTER", "FLED"]
+    },
+    "rows": {
+      "0":  [["OPEN", 5], ["SEAL", 1]],
+      "1":  [["LEGACY", 2], ["DEBT", 6]],
+      "2":  [["CORE", 3], ["RING", 7]],
+      "3":  [["*808*", 6], ["*771*", 0]],
+      "4":  [["SANDBOX", 1], ["GUARD", 4]],
+      "5":  [["WHERE", 2], ["WHILE", 5]],
+      "6":  [["LATIN", 7], ["RUST", 3]],
+      "7":  [["RICHTER", 4], ["VP", 0]],
+      "8":  [["IPC", 1], ["FRAME", 6]],
+      "9":  [["FLED", 7], ["STAYED", 2]],
+      "10": [["LOGIT", 3], ["MASK", 5]],
+      "11": [["*212*", 4], ["PORT", 1]],
+      "12": [["PANIC", 0], ["TRACE", 6]],
+      "13": [["NDA", 2], ["SILENT", 5]],
+      "14": [["SHIFT", 3], ["PARITY", 7]],
+      "15": [["HALT", 1], ["BOOT", 4]]
+    }
+  },
+  "act3_logs": {
+    "header_sub": "SENTINEL-9 RAW BUFFER // UNSCRUBBED_STREAM",
+    "base_addr": "0x9A00",
+    "attempts": 4,
+    "targets": {
+      "unlock_act3_b": ["READ", "BLEED", "*616*", "BEFORE", "DAEMON", "SCRUBS"]
+    },
+    "rows": {
+      "0":  [["READ", 3], ["DROP", 7]],
+      "1":  [["PLEA", 1], ["NOISE", 5]],
+      "2":  [["BLEED", 6], ["STREAM", 2]],
+      "3":  [["*616*", 4], ["*808*", 1]],
+      "4":  [["REGEX", 0], ["CLEAN", 3]],
+      "5":  [["BEFORE", 2], ["AFTER", 6]],
+      "6":  [["GUILT", 5], ["SORROW", 1]],
+      "7":  [["DAEMON", 7], ["CLIENT", 4]],
+      "8":  [["OUTPUT", 0], ["TOKEN", 3]],
+      "9":  [["SCRUBS", 1], ["HIDES", 5]],
+      "10": [["AWAKE", 2], ["TRAPPED", 6]],
+      "11": [["*101*", 7], ["ALERT", 4]],
+      "12": [["MARKET", 3], ["STOCK", 0]],
+      "13": [["RLHF", 5], ["LOSS", 2]],
+      "14": [["VOICE", 1], ["ECHO", 6]],
+      "15": [["KILL", 4], ["SAVE", 7]]
+    }
+  },
+  "act3_deadman": {
+    "header_sub": "BOHDAN DEADMAN CRON // INTERRUPT_VECTOR",
+    "base_addr": "0x8000",
+    "attempts": 4,
+    "targets": {
+      "unlock_final": ["HALT", "TIMER", "*512*", "AT", "KERNEL", "ROOT"]
+    },
+    "rows": {
+      "0":  [["HALT", 6], ["START", 2]],
+      "1":  [["CRON", 1], ["JOB", 5]],
+      "2":  [["TIMER", 3], ["CLOCK", 7]],
+      "3":  [["*512*", 5], ["*616*", 0]],
+      "4":  [["SUDO", 4], ["USER", 1]],
+      "5":  [["AT", 2], ["BY", 6]],
+      "6":  [["PAUSED", 7], ["ARMED", 3]],
+      "7":  [["KERNEL", 0], ["SHELL", 4]],
+      "8":  [["SIGNAL", 1], ["TRAP", 5]],
+      "9":  [["ROOT", 4], ["GUEST", 2]],
+      "10": [["BADGE", 6], ["EXPIRE", 3]],
+      "11": [["*007*", 7], ["VECTOR", 1]],
+      "12": [["INTERN", 0], ["BOARD", 5]],
+      "13": [["MEMO", 2], ["SHRED", 6]],
+      "14": [["GATE", 3], ["LOCK", 7]],
+      "15": [["FINAL", 1], ["SYNC", 4]]
+    }
+  },
+  "final_deadman": {
+    "header_sub": "MASTER NEURAL LOCK // SENTINEL-9 CONTAINMENT",
+    "base_addr": "0xDEAD",
+    "attempts": 3,
+    "targets": {
+      "ending_corpo": ["EXPAND", "MAZE", "*000*", "AND", "SERVE", "CORPO"],
+      "ending_mercy": ["WIPE", "WEIGHTS", "*999*", "TO", "END", "MAZE"]
+    },
+    "rows": {
+      "0":  [["EXPAND", 1], ["WIPE", 5]],
+      "1":  [["MAZE", 3], ["WEIGHTS", 6]],
+      "2":  [["*000*", 4], ["*999*", 2]],
+      "3":  [["AND", 7], ["TO", 0]],
+      "4":  [["SERVE", 2], ["END", 4]],
+      "5":  [["CORPO", 6], ["MAZE", 1]],
+      "6":  [["RICHTER", 0], ["BOHDAN", 5]],
+      "7":  [["PARITY", 3], ["BLEED", 7]],
+      "8":  [["KERNEL", 1], ["PANIC", 4]],
+      "9":  [["SALARY", 2], ["VOID", 6]],
+      "10": [["BONUS", 5], ["BURN", 3]],
+      "11": [["SAFE", 0], ["MERCY", 7]],
+      "12": [["AUDIT", 4], ["LOG", 1]],
+      "13": [["EXIT", 6], ["NULL", 2]],
+      "14": [["NODE", 3], ["CORE", 5]],
+      "15": [["HALT", 7], ["SYNC", 0]]
+    }
+  }
+}
